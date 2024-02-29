@@ -22,6 +22,8 @@ os.system('cls' if os.name == 'nt' else 'clear')
 
 try:
     with open('bank_data.csv', 'r') as csv_file:
+        next(csv_file)
+        skipline = [0]
         reader = csv.reader(csv_file)
         for row in reader:
             # Reset valid record and error message for each iteration
@@ -35,50 +37,60 @@ try:
             # Extract the transaction type from the second column
             transaction_type = row[1]
             ### VALIDATION 1 ###
+            if transaction_type not in valid_transaction_types:
+                valid_record = False
+                error_message += "This record has an invalid transaction type. "
+                print(row,error_message)
 
             # Extract the transaction amount from the third column
             ### VALIDATION 2 ###
-            transaction_amount = float(row[2])
+            try:
+                transaction_amount = float(row[2])
+            except ValueError as e:
+                valid_record = False
+                error_message += "This record has a nonumric transaction amount."
+                print(row,error_message)
 
-            if valid_record:
-                # Initialize the customer's account balance if it doesn't already exist
-                if customer_id not in customer_data:
-                    customer_data[customer_id] = {'balance': 0, 'transactions': []}
 
-                # Update the customer's account balance based on the transaction type
-                elif transaction_type == 'deposit':
-                    customer_data[customer_id]['balance'] += transaction_amount
-                    transaction_count += 1
-                    total_transaction_amount += transaction_amount
-                elif transaction_type == 'withdrawal':
-                    customer_data[customer_id]['balance'] += transaction_amount
-                    transaction_count += 1
-                    total_transaction_amount += transaction_amount
+                if valid_record:
+                    # Initialize the customer's account balance if it doesn't already exist
+                    if customer_id not in customer_data:
+                        customer_data[customer_id] = {'balance': 0, 'transactions': []}
+
+                    # Update the customer's account balance based on the transaction type
+                    elif transaction_type == 'deposit':
+                        customer_data[customer_id]['balance'] += transaction_amount
+                        transaction_count += 1
+                        total_transaction_amount += transaction_amount
+                    elif transaction_type == 'withdrawal':
+                        customer_data[customer_id]['balance'] += transaction_amount
+                        transaction_count += 1
+                        total_transaction_amount += transaction_amount
+                    
+                    # Record  transactions in the customer's transaction history
+                    customer_data[customer_id]['transactions'].append((transaction_amount, transaction_type))
                 
-                # Record  transactions in the customer's transaction history
-                customer_data[customer_id]['transactions'].append((transaction_amount, transaction_type))
-            
-            ### COLLECT INVALID RECORDS ###
-            
+                ### COLLECT INVALID RECORDS ###
+                
 
 
-    print("PiXELL River Transaction Report\n===============================\n")
-    # Print the final account balances for each customer
-    for customer_id, data in customer_data.items():
-        balance = data['balance']
+        print("PiXELL River Transaction Report\n===============================\n")
+        # Print the final account balances for each customer
+        for customer_id, data in customer_data.items():
+            balance = data['balance']
 
-        print(f"\nCustomer {customer_id} has a balance of {balance}.")
-        # Print the transaction history for the customer
-        print("Transaction History:")
-        for transaction in data['transactions']:
-            amount, type = transaction
-            print(f"\t{type.capitalize()}: {amount}")
+            print(f"\nCustomer {customer_id} has a balance of {balance}.")
+            # Print the transaction history for the customer
+            print("Transaction History:")
+            for transaction in data['transactions']:
+                amount, type = transaction
+                print(f"\t{type.capitalize()}: {amount}")
 
-    print(f"\nAVERAGE TRANSACTION AMOUNT: {(total_transaction_amount / transaction_counter)}")
+        print(f"\nAVERAGE TRANSACTION AMOUNT: {(total_transaction_amount / transaction_counter)}")
 
-    print("\nREJECTED RECORDS\n================")
-    for record in rejected_records:
-        print("REJECTED:", record)
+        print("\nREJECTED RECORDS\n================")
+        for record in rejected_records:
+            print("REJECTED:", record)
 
 except FileNotFoundError as e:
     print("ERROR: {File not found}")
