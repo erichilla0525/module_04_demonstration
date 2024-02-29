@@ -39,18 +39,18 @@ try:
             ### VALIDATION 1 ###
             if transaction_type not in valid_transaction_types:
                 valid_record = False
-                error_message += "This record has an invalid transaction type. "
-                print(row,error_message)
-
+                error_message += "has an invalid transaction type. "
+                rejected_records.append((row,error_message))
+                
+            
             # Extract the transaction amount from the third column
             ### VALIDATION 2 ###
             try:
                 transaction_amount = float(row[2])
-            except ValueError as e:
+            except ValueError:
                 valid_record = False
-                error_message += "This record has a nonumric transaction amount."
-                print(row,error_message)
-
+                error_message += "This record has a non-numeric transaction amount."
+                rejected_records.append((row,error_message))
 
                 if valid_record:
                     # Initialize the customer's account balance if it doesn't already exist
@@ -71,7 +71,10 @@ try:
                     customer_data[customer_id]['transactions'].append((transaction_amount, transaction_type))
                 
                 ### COLLECT INVALID RECORDS ###
-                
+                else:
+                    for record, error_message in rejected_records:
+                        print("REJECTED:", record, error_message)
+                    
 
 
         print("PiXELL River Transaction Report\n===============================\n")
