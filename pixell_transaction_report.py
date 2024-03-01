@@ -22,7 +22,7 @@ os.system('cls' if os.name == 'nt' else 'clear')
 
 try:
     with open('bank_data.csv', 'r') as csv_file:
-        ## For skipping the line without data we need
+        ## For skipping the line without data we need, I googled it
         next(csv_file)
         skipline = [0]
         reader = csv.reader(csv_file)
@@ -89,7 +89,7 @@ try:
             for transaction in data['transactions']:
                 amount, type = transaction
                 print(f"\t{type.capitalize()}: {amount}")
-
+        ## I modify the virable used here, it should be transaction_count, the former one is not in looping, so it will always be zero
         print(f"\nAVERAGE TRANSACTION AMOUNT: {(total_transaction_amount / transaction_count)}")
 
         print("\nREJECTED RECORDS\n================")
