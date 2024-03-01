@@ -1,10 +1,13 @@
-# [Project Name]
+# [Module 4]
 
 ## Description
-[Provide the module number to which the project applies]
+[Troubleshooting and Exception Handling: Programming Beyond Expected Results]
 
 ## Author
 [Tong Xu]
+
+## Code Modification:
+[I printed the all the rejections with all the recorded error reports for each row]
 
 ## Assignment
 [Troubleshooting and Exception Handling]
