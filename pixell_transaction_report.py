@@ -22,6 +22,7 @@ os.system('cls' if os.name == 'nt' else 'clear')
 
 try:
     with open('bank_data.csv', 'r') as csv_file:
+        ## For skipping the line without data we need
         next(csv_file)
         skipline = [0]
         reader = csv.reader(csv_file)
@@ -47,10 +48,7 @@ try:
             ### VALIDATION 2 ###
             try:
                 transaction_amount = float(row[2])
-            except ValueError:
-                valid_record = False
-                error_message += "This record has a non-numeric transaction amount."
-                rejected_records.append((row,error_message))
+            
 
                 if valid_record:
                     # Initialize the customer's account balance if it doesn't already exist
@@ -74,8 +72,11 @@ try:
                 else:
                     for record, error_message in rejected_records:
                         print("REJECTED:", record, error_message)
+            except ValueError:
+                valid_record = False
+                error_message += "This record has a non-numeric transaction amount."
+                rejected_records.append((row,error_message))
                     
-
 
         print("PiXELL River Transaction Report\n===============================\n")
         # Print the final account balances for each customer
@@ -89,15 +90,15 @@ try:
                 amount, type = transaction
                 print(f"\t{type.capitalize()}: {amount}")
 
-        print(f"\nAVERAGE TRANSACTION AMOUNT: {(total_transaction_amount / transaction_counter)}")
+        print(f"\nAVERAGE TRANSACTION AMOUNT: {(total_transaction_amount / transaction_count)}")
 
         print("\nREJECTED RECORDS\n================")
         for record in rejected_records:
             print("REJECTED:", record)
 
 except FileNotFoundError as e:
-    print("ERROR: {File not found}")
+    print("ERROR: {File not found}", e)
 except Exception as e:
-    print("ERROR: {General error}")
+    print("ERROR: {General error}", e)
 
 
