@@ -83,14 +83,14 @@ try:
         for customer_id, data in customer_data.items():
             balance = data['balance']
 
-            print(f"\nCustomer {customer_id} has a balance of {balance}.")
+            print(f"\nCustomer {customer_id} has a balance of ${balance}.")
             # Print the transaction history for the customer
             print("Transaction History:")
             for transaction in data['transactions']:
                 amount, type = transaction
-                print(f"\t{type.capitalize()}: {amount}")
+                print(f"\t{type.capitalize()}: ${amount}")
         ## I modify the virable used here, it should be transaction_count, the former one is not in looping, so it will always be zero
-        print(f"\nAVERAGE TRANSACTION AMOUNT: {(total_transaction_amount / transaction_count)}")
+        print(f"\nAVERAGE TRANSACTION AMOUNT: ${(total_transaction_amount / transaction_count)}")
 
         print("\nREJECTED RECORDS\n================")
         for record in rejected_records:
